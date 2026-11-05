@@ -10,7 +10,7 @@ const footerText = String(footerValue || '')
     <div class="copyright">
         <span class="copyright-mark" aria-hidden="true"><%- theme.footer.icon || '©' %></span>
         <span><%- footerText %></span>
-        <% if(theme.statistics && theme.statistics.busuanzi && !page.hidden){ %>
+        <% if(theme.statistics && theme.statistics.busuanzi && !page.hidden && is_home()){ %>
         <span id="busuanzi_container_site_pv" class="site-stat" style="display:none">
             · <%- theme.statistics.site_label %> <span id="busuanzi_value_site_pv"></span>
         </span>

@@ -69,7 +69,7 @@ if (is_archive()){
     <script src="<%- url_for(url) %>"></script>
     <% }); %>
 <% } %>
-<% if (theme.statistics && theme.statistics.busuanzi && !page.hidden) { %>
+<% if (theme.statistics && theme.statistics.busuanzi && !page.hidden && (is_home() || is_post())) { %>
     <script defer src="https://cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js"></script>
 <% } %>
 <%# mathjax support %>

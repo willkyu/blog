@@ -5,4 +5,8 @@ description: 虚己以游世
 layout: page
 ---
 
-# About willkyu
+> Done is better than perfect.
+
+# Contact
+
+email: `willkyu@qq.com`
