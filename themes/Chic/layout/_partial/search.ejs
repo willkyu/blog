@@ -1,0 +1,17 @@
+<% if(theme.search && theme.search.enable){ %>
+<div class="search-dialog" data-search-dialog hidden>
+    <button class="search-backdrop" type="button" data-search-close aria-label="Close search"></button>
+    <section class="search-panel" role="dialog" aria-modal="true" aria-labelledby="search-title">
+        <header class="search-header">
+            <h2 id="search-title">Search</h2>
+            <button class="icon-button" type="button" data-search-close aria-label="Close search">×</button>
+        </header>
+        <label class="search-input-wrap">
+            <span class="sr-only">Search posts</span>
+            <input type="search" data-search-input placeholder="Title, content, category, or tag" autocomplete="off">
+        </label>
+        <div class="search-status" data-search-status>Type to search</div>
+        <ol class="search-results" data-search-results></ol>
+    </section>
+</div>
+<% } %>

@@ -1,0 +1,97 @@
+# Header
+navname: willkyu's Blog
+
+# navigatior items
+nav:
+  Timeline: /timeline/
+  Categories: /categories/
+  Tags: /tags/
+  About: /about/
+
+# favicon
+favicon: /images/mimikyu.png
+
+# Profile
+nickname: willkyu
+
+### this variable is MarkDown form.
+description: 我的思念将追随你进入梦乡
+avatar: /images/mimikyu.png
+profile_link: /
+
+# Profile links. Add another name/url/icon item to extend this list.
+links:
+  - name: Blog
+    url: /timeline/
+    icon: blog
+  - name: RSS
+    url: /atom.xml
+    icon: rss
+  - name: GitHub
+    url: https://github.com/willkyu
+    icon: github
+
+# how links show: you have 2 choice--text or icon.
+links_text_enable: false
+links_icon_enable: true
+
+fonts:
+  brand: '"Comic Sans MS", "Comic Sans", "Blog Kai Adjusted", STKaiti, KaiTi, cursive'
+  description: '"Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif'
+  ui: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
+  reading: '"Helvetica Neue", Helvetica, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
+  code: 'ui-monospace, SFMono-Regular, "SF Mono", "Cascadia Code", "Segoe UI Mono", Menlo, Consolas, monospace'
+
+footer:
+  icon: ©
+  text: '{year} {author}'
+
+# Post page
+## Post_meta
+post_meta_enable: true
+
+post_author_enable: true
+post_date_enable: true
+post_category_enable: true
+## Post copyright
+post_copyright_enable: false
+
+post_copyright_author_enable: false
+post_copyright_permalink_enable: false
+post_copyright_license_enable: false
+post_copyright_license_text: Copyright (c) 2019 <a href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE
+post_copyright_slogan_enable: false
+post_copyright_slogan_text: Do you believe in <strong>DESTINY</strong>?
+## toc
+post_toc_enable: true
+
+# Page
+page_title_enable: true
+
+# Date / Time format
+## Hexo uses Moment.js to parse and display date
+## You can customize the date format as defined in
+## http://momentjs.com/docs/#/displaying/format/
+date_format: YYYY-MM-DD
+time_format: H:mm:ss
+
+# stylesheets loaded in the <head>
+stylesheets:
+  - /css/style.css
+
+# scripts loaded in the end of the body
+scripts:
+  - /js/script.js
+  - /js/tocbot.min.js
+    # tscanlin/tocbot: Build a table of contents from headings in an HTML document.
+    # https://github.com/tscanlin/tocbot
+
+
+# plugin functions
+## Mathjax: Math Formula Support
+## https://www.mathjax.org
+mathjax:
+  enable: true
+  import: demand # global or demand
+  ## global: all pages will load mathjax,this will degrade performance and some grammers may be parsed wrong.
+  ## demand: Recommend option,if your post need fomula, you can declare 'mathjax: true' in Front-matter

@@ -1,0 +1,78 @@
+# Chic theme configuration. Keep local customizations here so the vendored theme
+# can be updated without overwriting the blog settings.
+
+navname: willkyu's Blog
+
+nav:
+  Timeline: /timeline/
+  Categories: /categories/
+  Tags: /tags/
+  About: /about/
+
+favicon: /images/favicon.png
+
+nickname: willkyu
+description: 我的思念将追随你进入梦乡
+avatar: /images/mimikyu.png
+profile_link: /
+
+links:
+  - name: Blog
+    url: /timeline/
+    icon: blog
+  - name: RSS
+    url: /atom.xml
+    icon: rss
+  - name: GitHub
+    url: https://github.com/willkyu
+    icon: github
+
+links_text_enable: false
+links_icon_enable: true
+
+fonts:
+  brand: '"Comic Sans MS", "Comic Sans", "Blog Kai Adjusted", STKaiti, KaiTi, cursive'
+  description: '"Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif'
+  ui: '-apple-system, BlinkMacSystemFont, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", "Noto Sans CJK SC", "WenQuanYi Micro Hei", sans-serif'
+  reading: '"Helvetica Neue", Helvetica, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", "Noto Sans CJK SC", "WenQuanYi Micro Hei", sans-serif'
+  code: 'ui-monospace, SFMono-Regular, "SF Mono", "Cascadia Code", "Segoe UI Mono", "Source Code Pro", Menlo, Consolas, "Liberation Mono", monospace'
+
+search:
+  enable: true
+
+statistics:
+  busuanzi: true
+  site_label: Visits
+  page_label: Views
+
+footer:
+  icon: ©
+  text: '{year} {author}'
+
+post_meta_enable: true
+post_author_enable: true
+post_date_enable: true
+post_category_enable: true
+
+post_copyright_enable: false
+post_copyright_author_enable: false
+post_copyright_permalink_enable: false
+post_copyright_license_enable: false
+post_copyright_slogan_enable: false
+
+post_toc_enable: true
+page_title_enable: true
+
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+
+stylesheets:
+  - /css/style.css
+
+scripts:
+  - /js/script.js
+  - /js/tocbot.min.js
+
+mathjax:
+  enable: true
+  import: demand

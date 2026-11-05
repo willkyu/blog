@@ -1,0 +1,26 @@
+<div class="container profile-container">
+    <div class="intro">
+        <div class="avatar">
+            <a href="<%- url_for(theme.profile_link || config.root) %>"><img src="<%- url_for(theme.avatar) %>" alt="<%- theme.nickname %>"></a>
+        </div>
+        <div class="nickname"><%- theme.nickname %></div>
+        <div class="description"><%- markdown(theme.description) %></div>
+        <div class="links">
+            <%
+            const profileLinks = Array.isArray(theme.links)
+                ? theme.links
+                : Object.keys(theme.links || {}).map(name => ({ name, url: theme.links[name], icon: name.toLowerCase() }));
+            %>
+            <% profileLinks.forEach(link => { %>
+                    <a class="link-item" title="<%- link.name %>" aria-label="<%- link.name %>" href="<%- url_for(link.url) %>">
+                        <% if(theme.links_text_enable) { %>
+                            <%= link.name %>
+                        <%}%>
+                        <%if(theme.links_icon_enable){ %>
+                            <i class="iconfont icon-<%- link.icon || 'link' %>"></i>
+                        <%}%>
+                    </a>
+            <% }); %>
+        </div>
+    </div>
+</div>
