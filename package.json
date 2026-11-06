@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "build": "hexo generate",
-    "check": "npm run clean && npm run build && node tools/validate-site.js",
+    "check": "npm run test:homepage-feed && npm run clean && npm run build && node tools/validate-site.js",
     "clean": "hexo clean",
     "format": "node tools/format-markdown.js",
     "new": "hexo new post",
-    "server": "hexo server"
+    "server": "hexo server",
+    "test:homepage-feed": "node tools/test-homepage-feed.js"
   },
   "hexo": {
     "version": "8.1.2"

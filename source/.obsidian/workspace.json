@@ -11,13 +11,32 @@
             "id": "94ac7efdfb9eb974",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "_posts/Learning/Notes/Papers/KG-in-RS-Survey.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "KG-in-RS-Survey"
+            }
+          },
+          {
+            "id": "c622b12a9602d2c9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_homepage.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "_homepage"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -181,6 +200,13 @@
       "bases:新建数据库": false
     }
   },
-  "active": "94ac7efdfb9eb974",
-  "lastOpenFiles": []
+  "active": "c622b12a9602d2c9",
+  "lastOpenFiles": [
+    "_posts/Learning/Notes/Papers/KG-in-RS-Survey.md",
+    "_posts/Learning/Notes/Papers/TKG-Note.md",
+    "_posts/Learning/Notes/Papers/MMRS-Survey.md",
+    "_posts/Learning/Notes/Papers/MMKG-Survey.md",
+    "_posts/Learning/Notes/Papers/LLM-in-RS-md.md",
+    "_homepage.md"
+  ]
 }

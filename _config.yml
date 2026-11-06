@@ -98,6 +98,7 @@ pagination_dir: page
 include:
 exclude:
 ignore:
+  - "**/_homepage.md"
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
