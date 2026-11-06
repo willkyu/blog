@@ -29,6 +29,25 @@ const posts = [
   }
 ];
 
+const contract = {
+  contractVersion: 1,
+  feedSchemaVersion: 7,
+  feedItem: {
+    requiredFields: ['bind', 'title', 'summary', 'href', 'appearance', 'tags', 'order'],
+    optionalFields: ['cover'],
+    forbiddenFields: ['id'],
+    unknownFields: 'reject'
+  },
+  itemTypes: [
+    { appearance: 'text', coverRequired: false },
+    { appearance: 'essay', coverRequired: false },
+    { appearance: 'browser', coverRequired: true },
+    { appearance: 'book', coverRequired: true },
+    { appearance: 'disc', coverRequired: true },
+    { appearance: 'gallery', coverRequired: true }
+  ]
+};
+
 function manifest(body) {
   return `---\nhomepageManifest: 1\n---\n\n${body.trim()}\n`;
 }
@@ -40,6 +59,7 @@ function build(raw, overrides = {}) {
     sourceDir,
     root: '/blog/',
     posts,
+    contract,
     generatedAt: new Date('2026-01-02T03:04:05.000Z'),
     ...overrides
   });
@@ -100,7 +120,7 @@ enabled:: true
 `));
 
 assert.deepEqual(feed, {
-  schemaVersion: 1,
+  schemaVersion: 7,
   source: 'blog',
   generatedAt: '2026-01-02T03:04:05.000Z',
   items: [
@@ -136,6 +156,16 @@ enabled:: false
 `));
 assert.deepEqual(disabledFeed.items, []);
 
+const essayFeed = build(manifest(`
+## [[Notes/Alpha|Essay without cover]]
+bind:: blog
+appearance:: essay
+summary:: Essay summary.
+order:: 1
+`));
+assert.equal(essayFeed.items[0].appearance, 'essay');
+assert.equal(Object.hasOwn(essayFeed.items[0], 'cover'), false);
+
 expectError(
   () => parseManifest(manifest(`
 ## [[Notes/Alpha|Has ID]]
@@ -144,7 +174,7 @@ appearance:: text
 summary:: Summary.
 order:: 1
 id:: handwritten
-  `)),
+  `), '_homepage.md', contract),
   /IDs are generated/
 );
 
@@ -156,7 +186,7 @@ appearance:: text
 summary:: Summary.
 order:: 1
 x:: 20
-  `)),
+  `), '_homepage.md', contract),
   /unsupported field "x"/
 );
 
@@ -167,7 +197,7 @@ bind:: blog
 appearance:: book
 summary:: Summary.
 order:: 1
-  `)),
+  `), '_homepage.md', contract),
   /requires a cover/
 );
 

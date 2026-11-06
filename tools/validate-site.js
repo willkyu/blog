@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { loadHomepageItemTypesContract } = require('./homepage-item-types');
 
 const publicDir = path.resolve(__dirname, '..', 'public');
 const siteRoot = '/blog/';
@@ -9,8 +10,6 @@ const htmlFiles = [];
 const publishedFiles = [];
 const hiddenMarker = '<!-- flag of hidden posts -->';
 const allowedBinds = new Set(['research', 'blog', 'pokemon', 'projects']);
-const allowedAppearances = new Set(['text', 'gallery', 'book', 'browser', 'disc']);
-const coverRequiredAppearances = new Set(['gallery', 'book', 'browser', 'disc']);
 
 function walk(directory) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -58,7 +57,7 @@ function compareFeedItems(left, right) {
   return 0;
 }
 
-function validateHomepageFeed() {
+function validateHomepageFeed(contract) {
   const issues = [];
   const feedPath = path.join(publicDir, 'homepage-feed.json');
   if (!fs.existsSync(feedPath)) {
@@ -85,7 +84,9 @@ function validateHomepageFeed() {
     if (!topLevelKeys.includes(key)) issues.push(`feed is missing top-level field "${key}"`);
   }
 
-  if (feed.schemaVersion !== 1) issues.push('feed.schemaVersion must be 1');
+  if (feed.schemaVersion !== contract.feedSchemaVersion) {
+    issues.push(`feed.schemaVersion must be ${contract.feedSchemaVersion}`);
+  }
   if (feed.source !== 'blog') issues.push('feed.source must be "blog"');
   if (
     typeof feed.generatedAt !== 'string'
@@ -99,8 +100,13 @@ function validateHomepageFeed() {
     return { issues, itemCount: 0 };
   }
 
-  const requiredItemKeys = ['bind', 'title', 'summary', 'href', 'appearance', 'tags', 'order'];
-  const allowedItemKeys = new Set([...requiredItemKeys, 'cover']);
+  const requiredItemKeys = contract.feedItem.requiredFields;
+  const allowedItemKeys = new Set([
+    ...contract.feedItem.requiredFields,
+    ...contract.feedItem.optionalFields
+  ]);
+  const forbiddenItemKeys = new Set(contract.feedItem.forbiddenFields);
+  const itemTypes = new Map(contract.itemTypes.map(type => [type.appearance, type]));
   const hrefs = new Set();
 
   feed.items.forEach((item, index) => {
@@ -111,6 +117,7 @@ function validateHomepageFeed() {
     }
 
     for (const key of Object.keys(item)) {
+      if (forbiddenItemKeys.has(key)) issues.push(`${label} has forbidden field "${key}"`);
       if (!allowedItemKeys.has(key)) issues.push(`${label} has unexpected field "${key}"`);
     }
     for (const key of requiredItemKeys) {
@@ -118,7 +125,8 @@ function validateHomepageFeed() {
     }
 
     if (!allowedBinds.has(item.bind)) issues.push(`${label}.bind is invalid`);
-    if (!allowedAppearances.has(item.appearance)) issues.push(`${label}.appearance is invalid`);
+    const itemType = itemTypes.get(item.appearance);
+    if (!itemType) issues.push(`${label}.appearance is invalid`);
     if (typeof item.title !== 'string' || !item.title.trim() || /[\r\n]/.test(item.title)) {
       issues.push(`${label}.title must be non-empty single-line text`);
     }
@@ -129,7 +137,7 @@ function validateHomepageFeed() {
     if (!Array.isArray(item.tags) || item.tags.some(tag => typeof tag !== 'string' || !tag.trim())) {
       issues.push(`${label}.tags must be an array of non-empty strings`);
     }
-    if (coverRequiredAppearances.has(item.appearance) && typeof item.cover !== 'string') {
+    if (itemType && itemType.coverRequired && typeof item.cover !== 'string') {
       issues.push(`${label}.cover is required for appearance "${item.appearance}"`);
     }
 
@@ -170,6 +178,9 @@ function validateHomepageFeed() {
 
   return { issues, itemCount: feed.items.length };
 }
+
+async function main() {
+const contract = await loadHomepageItemTypesContract();
 
 if (!fs.existsSync(publicDir)) {
   console.error('public/ does not exist. Run npm run build first.');
@@ -227,7 +238,7 @@ for (const discoveryFile of discoveryFiles) {
   manifestDiscoveryLeaks.push(path.relative(publicDir, discoveryFile).replace(/\\/g, '/'));
 }
 
-const homepageFeed = validateHomepageFeed();
+const homepageFeed = validateHomepageFeed(contract);
 
 const exposedHiddenPages = new Map();
 for (const discoveryFile of discoveryFiles) {
@@ -285,3 +296,9 @@ console.log(
   + `${hiddenPages.size} hidden page(s) and _homepage.md stay out of discovery surfaces; `
   + `homepage-feed.json contains ${homepageFeed.itemCount} valid item(s).`
 );
+}
+
+main().catch(error => {
+  console.error(error.stack || error.message);
+  process.exit(1);
+});

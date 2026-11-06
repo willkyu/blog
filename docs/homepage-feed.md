@@ -42,13 +42,14 @@ enabled:: true
 字段规则：
 
 - `bind` 必填，可选 `research`、`blog`、`pokemon`、`projects`。
-- `appearance` 必填，可选 `text`、`gallery`、`book`、`browser`、`disc`、`essay`。
+- `appearance` 必填，当前可选 `text`、`essay`、`browser`、`book`、`disc`、`gallery`。
+  实际允许值以公开的 `homepage-item-types.json` 契约为准。
 - `summary` 必填，必须是非空单行文本。
 - `order` 必填，必须是整数；输出先按它升序排列，相同时按最终链接排序。
 - `tags` 可选，使用英文逗号或中文逗号分隔。
 - `enabled` 可选，默认为 `true`；设为 `false` 时条目不会输出，但仍会接受完整校验。
-- `cover` 对 `text` 可选，对其他外观必填。支持普通 Wiki Link `[[...]]` 和 Obsidian
-  嵌入链接 `![[...]]`。
+- `cover` 是否必填由公开契约中对应类型的 `coverRequired` 决定。支持普通 Wiki Link
+  `[[...]]` 和 Obsidian 嵌入链接 `![[...]]`。
 - 不允许填写 `id`，也不允许坐标、尺寸、视差、动画、随机位置或其他未定义字段。
 
 在 `_homepage.md` 中粘贴附件时，当前 Obsidian 配置会将文件保存到
@@ -66,6 +67,11 @@ npm run check
 构建会读取文章经过 Hexo front matter 与 permalink 规则计算出的最终地址，并将站点 `root`
 加入链接。封面必须对应 Vault 内真实存在、且构建后可以公开访问的文件。文章或封面无法解析、
 链接重复、字段非法时，构建会失败并指出条目和原因。
+
+生成 feed 前，构建会读取主页仓库公开的
+[`homepage-item-types.json`](https://raw.githubusercontent.com/willkyu/willkyu.github.io/main/public/homepage-item-types.json)。
+`appearance`、封面必填规则、feed 输出字段及 `schemaVersion` 都以该契约为准；契约无法读取或
+校验失败时终止构建。可通过环境变量 `HOMEPAGE_ITEM_TYPES_URL` 指向兼容契约，便于离线测试。
 
 成功后，构建产物为 `public/homepage-feed.json`，线上路径为
 `/blog/homepage-feed.json`。不要手工编辑 `public/`。

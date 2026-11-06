@@ -2,8 +2,10 @@
 
 const path = require('path');
 const { buildHomepageFeed } = require('../tools/homepage-feed-core');
+const { loadHomepageItemTypesContract } = require('../tools/homepage-item-types');
 
-hexo.extend.generator.register('homepage-feed', function homepageFeedGenerator(locals) {
+hexo.extend.generator.register('homepage-feed', async function homepageFeedGenerator(locals) {
+  const contract = await loadHomepageItemTypesContract();
   const posts = [];
   locals.posts.forEach(post => {
     posts.push({
@@ -18,7 +20,8 @@ hexo.extend.generator.register('homepage-feed', function homepageFeedGenerator(l
     manifestPath: path.join(this.source_dir, '_homepage.md'),
     sourceDir: this.source_dir,
     root: this.config.root,
-    posts
+    posts,
+    contract
   });
 
   return {

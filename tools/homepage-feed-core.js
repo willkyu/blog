@@ -2,10 +2,9 @@
 
 const fs = require('fs');
 const path = require('path');
+const { validateHomepageItemTypesContract } = require('./homepage-item-types');
 
 const ALLOWED_BINDS = new Set(['research', 'blog', 'pokemon', 'projects']);
-const ALLOWED_APPEARANCES = new Set(['text', 'gallery', 'book', 'browser', 'disc']);
-const COVER_REQUIRED_APPEARANCES = new Set(['gallery', 'book', 'browser', 'disc']);
 const REQUIRED_FIELDS = ['bind', 'appearance', 'summary', 'order'];
 const OPTIONAL_FIELDS = ['tags', 'enabled', 'cover'];
 const ALLOWED_FIELDS = new Set([...REQUIRED_FIELDS, ...OPTIONAL_FIELDS]);
@@ -93,7 +92,7 @@ function parseHeading(line, lineNumber) {
   return { target, title, lineNumber, fields: new Map() };
 }
 
-function validateEntry(entry) {
+function validateEntry(entry, contract) {
   const label = entryLabel(entry);
   for (const field of REQUIRED_FIELDS) {
     if (!entry.fields.has(field)) {
@@ -109,9 +108,10 @@ function validateEntry(entry) {
   }
 
   const appearance = entry.fields.get('appearance');
-  if (!ALLOWED_APPEARANCES.has(appearance)) {
+  const itemType = contract.itemTypes.find(type => type.appearance === appearance);
+  if (!itemType) {
     throw new HomepageFeedError(
-      `${label} has invalid appearance "${appearance}"; expected one of ${[...ALLOWED_APPEARANCES].join(', ')}`
+      `${label} has invalid appearance "${appearance}"; expected one of ${contract.itemTypes.map(type => type.appearance).join(', ')}`
     );
   }
 
@@ -135,7 +135,7 @@ function validateEntry(entry) {
   }
 
   const cover = entry.fields.get('cover');
-  if (COVER_REQUIRED_APPEARANCES.has(appearance) && !cover) {
+  if (itemType.coverRequired && !cover) {
     throw new HomepageFeedError(`${label} requires a cover when appearance is "${appearance}"`);
   }
 
@@ -157,7 +157,8 @@ function validateEntry(entry) {
   };
 }
 
-function parseManifest(raw, manifestName = '_homepage.md') {
+function parseManifest(raw, manifestName = '_homepage.md', contract) {
+  const validatedContract = validateHomepageItemTypesContract(contract);
   const body = parseFrontMatter(raw, manifestName).replace(/<!--[\s\S]*?-->/g, '');
   const entries = [];
   let current = null;
@@ -168,7 +169,7 @@ function parseManifest(raw, manifestName = '_homepage.md') {
     if (!line) continue;
 
     if (line.startsWith('##')) {
-      if (current) entries.push(validateEntry(current));
+      if (current) entries.push(validateEntry(current, validatedContract));
       current = parseHeading(line, lineNumber);
       continue;
     }
@@ -202,8 +203,28 @@ function parseManifest(raw, manifestName = '_homepage.md') {
     current.fields.set(field, value);
   }
 
-  if (current) entries.push(validateEntry(current));
+  if (current) entries.push(validateEntry(current, validatedContract));
   return entries;
+}
+
+function validateFeedItemContract(item, contract, label) {
+  const { requiredFields, optionalFields, forbiddenFields } = contract.feedItem;
+  const allowedFields = new Set([...requiredFields, ...optionalFields]);
+  for (const field of requiredFields) {
+    if (!Object.hasOwn(item, field)) {
+      throw new HomepageFeedError(`${label} cannot satisfy contract: missing output field "${field}"`);
+    }
+  }
+  for (const field of forbiddenFields) {
+    if (Object.hasOwn(item, field)) {
+      throw new HomepageFeedError(`${label} cannot satisfy contract: forbidden output field "${field}"`);
+    }
+  }
+  for (const field of Object.keys(item)) {
+    if (!allowedFields.has(field)) {
+      throw new HomepageFeedError(`${label} cannot satisfy contract: unknown output field "${field}"`);
+    }
+  }
 }
 
 function postCandidates(posts, target) {
@@ -301,14 +322,19 @@ function normalizeSiteRoot(root) {
   return normalized === '//' ? '/' : normalized;
 }
 
-function buildHomepageFeed({ manifestPath, sourceDir, root, posts, generatedAt = new Date() }) {
+function buildHomepageFeed({ manifestPath, sourceDir, root, posts, contract, generatedAt = new Date() }) {
+  const validatedContract = validateHomepageItemTypesContract(contract);
   const manifestName = path.basename(manifestPath);
   if (!fs.existsSync(manifestPath)) {
     throw new HomepageFeedError(`${manifestName} is missing from the Obsidian Vault root`);
   }
 
   const siteRoot = normalizeSiteRoot(root);
-  const entries = parseManifest(fs.readFileSync(manifestPath, 'utf8'), manifestName);
+  const entries = parseManifest(
+    fs.readFileSync(manifestPath, 'utf8'),
+    manifestName,
+    validatedContract
+  );
   const resolved = [];
   const hrefSources = new Map();
 
@@ -331,6 +357,7 @@ function buildHomepageFeed({ manifestPath, sourceDir, root, posts, generatedAt =
       order: entry.order
     };
     if (entry.cover) item.cover = resolveCover(entry, sourceDir, siteRoot);
+    validateFeedItemContract(item, validatedContract, entryLabel(entry));
     if (entry.enabled) resolved.push(item);
   }
 
@@ -342,7 +369,7 @@ function buildHomepageFeed({ manifestPath, sourceDir, root, posts, generatedAt =
   });
 
   return {
-    schemaVersion: 1,
+    schemaVersion: validatedContract.feedSchemaVersion,
     source: 'blog',
     generatedAt: generatedAt.toISOString(),
     items: resolved
@@ -350,7 +377,6 @@ function buildHomepageFeed({ manifestPath, sourceDir, root, posts, generatedAt =
 }
 
 module.exports = {
-  ALLOWED_APPEARANCES,
   ALLOWED_BINDS,
   HomepageFeedError,
   buildHomepageFeed,
