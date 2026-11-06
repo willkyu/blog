@@ -15,7 +15,6 @@ enabled:: true
 
 bind:: pokemon
 appearance:: essay
-summary:: 游戏内锁闪宝可梦汇总，不包含配信的闪光宝可梦与联动宝可梦。
 tags:: Pokemon, Shiny
 order:: 20
 enabled:: true
