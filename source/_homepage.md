@@ -14,18 +14,18 @@ enabled:: true
 ## [[_posts/Pokemon/Shiny-Lock|锁闪宝可梦汇总]]
 
 bind:: pokemon
-appearance:: text
+appearance:: essay
 summary:: 游戏内锁闪宝可梦汇总，不包含配信的闪光宝可梦与联动宝可梦。
 tags:: Pokemon, Shiny
 order:: 20
 enabled:: true
 
-## [[_posts/Pokemon/Strategies/Out-Game/Pokemon-Cartridges-Authenticate|宝可梦卡带鉴别]]
+## [[_posts/Pokemon/Strategies/Out-Game/Pokemon-Cartridges-Authenticate|PM]]
 
 bind:: pokemon
 appearance:: disc
 cover:: ![[assets/_homepage/disc_cover.png]]
-summary:: 宝可梦 GBA 和 NDS 卡带真伪鉴别方法整理。
+summary:: 宝可梦卡带鉴别
 tags:: Pokemon, Collection
 order:: 30
 enabled:: true
