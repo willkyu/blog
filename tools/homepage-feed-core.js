@@ -255,8 +255,8 @@ function resolvePost(entry, posts, siteRoot) {
 }
 
 function parseCoverTarget(value, entry) {
-  const wikiMatch = value.match(/^\[\[([^\]|]+)(?:\|[^\]]+)?\]\]$/);
-  if (value.startsWith('[[') && !wikiMatch) {
+  const wikiMatch = value.match(/^!?\[\[([^\]|]+)(?:\|[^\]]+)?\]\]$/);
+  if ((value.startsWith('[[') || value.startsWith('![[')) && !wikiMatch) {
     throw new HomepageFeedError(`${entryLabel(entry)} has malformed cover Wiki Link "${value}"`);
   }
   const target = (wikiMatch ? wikiMatch[1] : value).trim();

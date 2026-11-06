@@ -59,7 +59,7 @@ expectError(
 bind:: projects
 appearance:: gallery
 summary:: Gallery summary.
-cover:: [[images/封面 image.png]]
+cover:: ![[images/封面 image.png]]
 tags:: image， project
 order:: 20
 

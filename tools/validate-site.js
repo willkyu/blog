@@ -219,7 +219,7 @@ for (const name of ['atom.xml', 'sitemap.xml', 'sitemap.txt', 'search.json']) {
 
 const publishedManifestFiles = publishedFiles
   .map(file => path.relative(publicDir, file).replace(/\\/g, '/'))
-  .filter(file => /(^|\/)_homepage(?:\.|\/|$)/.test(file));
+  .filter(file => file === '_homepage.md' || file === '_homepage.html' || file.startsWith('_homepage/'));
 const manifestDiscoveryLeaks = [];
 for (const discoveryFile of discoveryFiles) {
   const content = fs.readFileSync(discoveryFile, 'utf8');
