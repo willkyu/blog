@@ -42,7 +42,7 @@ enabled:: true
 字段规则：
 
 - `bind` 必填，可选 `research`、`blog`、`pokemon`、`projects`。
-- `appearance` 必填，可选 `text`、`gallery`、`book`、`browser`、`disc`。
+- `appearance` 必填，可选 `text`、`gallery`、`book`、`browser`、`disc`、`essay`。
 - `summary` 必填，必须是非空单行文本。
 - `order` 必填，必须是整数；输出先按它升序排列，相同时按最终链接排序。
 - `tags` 可选，使用英文逗号或中文逗号分隔。

@@ -23,7 +23,8 @@ enabled:: true
 ## [[_posts/Pokemon/Strategies/Out-Game/Pokemon-Cartridges-Authenticate|宝可梦卡带鉴别]]
 
 bind:: pokemon
-appearance:: text
+appearance:: disc
+cover:: ![[assets/_homepage/disc_cover.png]]
 summary:: 宝可梦 GBA 和 NDS 卡带真伪鉴别方法整理。
 tags:: Pokemon, Collection
 order:: 30
